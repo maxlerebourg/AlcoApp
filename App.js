@@ -1,13 +1,30 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
+import AsyncStorage from '@react-native-community/async-storage';
 import {UserProvider} from './utils/UserContext';
 import Navigation from './components/Navigation';
-import {ThemeProvider} from "styled-components";
+import {ThemeProvider} from 'styled-components';
 
 function App() {
   const [user, setUser] = useState(null);
 
-  const login = user => setUser(user);
-  const logout = () => setUser(null);
+  const login = async (user) => {
+    await AsyncStorage.setItem('user', JSON.stringify(user));
+    setUser(user);
+  };
+  const logout = async () => {
+    await AsyncStorage.removeItem('user');
+    setUser(null);
+  };
+
+  useEffect(() => {
+    const getUser = async () => {
+      const user = await AsyncStorage.getItem('user');
+      if (user) {
+        setUser(JSON.parse(user));
+      }
+    };
+    getUser();
+  }, []);
 
   return (
   	<ThemeProvider
@@ -24,7 +41,7 @@ function App() {
 		  }}
 	  >
 	    <UserProvider value={{user, login, logout}}>
-	      <Navigation />
+        <Navigation />
 	    </UserProvider>
 		</ThemeProvider>
   );

@@ -132,8 +132,8 @@ android {
         applicationId "com.alcodico"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 25
+        versionName "3.5"
     }
     splits {
         abi {
@@ -191,6 +191,8 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
+    implementation project(':@react-native-community_async-storage')
+    implementation 'com.facebook.fresco:animated-gif:2.0.0'
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
@@ -223,3 +225,8 @@ task copyDownloadableDepsToLibs(type: Copy) {
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+
+project.ext.vectoricons = [
+    iconFontNames: [ 'SimpleLineIcons.ttf' ]
+]
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"

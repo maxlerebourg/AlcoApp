@@ -1,3 +1,5 @@
+import {Alert} from 'react-native';
+
 const server = 'http://api.lerebourg.eu';
 
 function convertJsonToUrl(json) {
@@ -6,8 +8,8 @@ function convertJsonToUrl(json) {
     .join('&');
 }
 
-async function getGames(cat) {
-  const url = `${server}/games${cat ? `?category=${cat}` : ''}`;
+async function getGames(json) {
+  const url = `${server}/games${json ? `?${convertJsonToUrl(json)}` : ''}`;
   return (await fetch(url)).json();
 }
 async function postGame(token, json) {
@@ -36,16 +38,21 @@ async function postComment(token, json) {
   }).then(data => data.json());
 }
 
-async function login(json) {
+async function signin(json) {
   const url = `${server}/login`;
-  return (await fetch(url)).json();
+  return fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(json),
+  }).then(data => data.json());
 }
 
-async function register(json) {
+async function signup(json) {
   const url = `${server}/register`;
   return fetch(url, {
     method: 'POST',
-    headers: {},
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(json),
   }).then(data => data.json());
 }
-export {getGames, postGame, postComment, getComments, login, register};
+export {getGames, postGame, postComment, getComments, signin, signup};
