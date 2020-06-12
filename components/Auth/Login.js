@@ -1,9 +1,11 @@
 import React, {useEffect, useContext, useRef} from 'react';
+import {useNavigation} from '@react-navigation/native';
 import {useForm} from 'react-hook-form';
 import {Alert} from 'react-native';
 import styled from 'styled-components';
 import UserContext from '../../utils/UserContext';
-import {signin} from "../../utils/api";
+import {signin} from '../../utils/api';
+import {Button, TextButton} from '../Button';
 
 const View = styled.View`
   height: 100%;
@@ -18,13 +20,14 @@ const TextInput = styled.TextInput`
   width: 60%;
   max-width: 300px;
 `;
-const Button = styled.Button`
+const StyledButton = styled(Button)`
   margin-bottom: 20px;
   width: 60%;
   max-width: 300px;
 `;
 
-function Login({onRegistration}) {
+function Login() {
+	const navigation = useNavigation();
   const {login} = useContext(UserContext);
   const ref = useRef(null);
   const { register, setValue,  handleSubmit } = useForm();
@@ -60,8 +63,12 @@ function Login({onRegistration}) {
         ref={ref}
         onSubmitEditing={() => handleSubmit(onSubmit)}
       />
-      <Button title="Se connecter" onPress={handleSubmit(onSubmit)} />
-      <Button title="Inscription" onPress={onRegistration} />
+      <StyledButton onPress={handleSubmit(onSubmit)}>
+	      <TextButton>Se connecter</TextButton>
+      </StyledButton>
+      <StyledButton onPress={() => navigation.navigate('Register')}>
+	      <TextButton>Inscription</TextButton>
+      </StyledButton>
     </View>
   )
 }

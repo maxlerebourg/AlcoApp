@@ -1,9 +1,11 @@
 import React, {useEffect, useContext} from 'react';
+import {useNavigation} from '@react-navigation/native';
 import {useForm} from 'react-hook-form';
 import {Alert} from 'react-native';
 import styled from 'styled-components';
 import UserContext from '../../utils/UserContext';
-import {signup} from "../../utils/api";
+import {signup} from '../../utils/api';
+import {Button, TextButton} from '../Button';
 
 const KeyboardAvoidingView = styled.KeyboardAvoidingView`
   height: 100%;
@@ -18,21 +20,23 @@ const TextInput = styled.TextInput`
   max-width: 300px;
   margin: 10px auto;
 `;
-const Button = styled.Button`
+const StyledButton = styled(Button)`
   width: 60%;
   max-width: 300px;
   margin: 10px auto;
 `;
 
 function Register() {
+	const navigation = useNavigation();
   const {login} = useContext(UserContext);
   const { register, setValue,  handleSubmit } = useForm();
   const onSubmit = async (data) => {
-    const user = await signup(data);
-    if (user.pseudo) {
+  	try {
+      const user = await signup(data);
       await login(user);
-    } else {
-      Alert.alert('Nop', 'Reessaye, tu as dû te tromper');
+      navigation.goBack();
+    } catch(err) {
+      Alert.alert('Nop', `Reessaye, tu as dû te tromper, ${err.status}`);
     }
   };
 
@@ -71,7 +75,9 @@ function Register() {
           onChangeText={text => setValue('lastname', text, true)}
           placeholder="Nom"
         />
-        <Button title="S'inscrire" onPress={handleSubmit(onSubmit)} />
+        <StyledButton onPress={handleSubmit(onSubmit)}>
+	        <TextButton>S'inscrire</TextButton>
+        </StyledButton>
       </ScrollView>
     </KeyboardAvoidingView>
   )

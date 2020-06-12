@@ -1,32 +1,16 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import styled, {useTheme} from 'styled-components';
+import {useTheme} from 'styled-components';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 
 import HomeGame from './Game/HomeGame';
 import HomeAuth from './Auth/HomeAuth';
+import HomeTools from './Tools/HomeTools';
 import Register from './Auth/Register';
 import Add from './Game/Add';
 import CategoryList from "./Game/CategoryList";
-
-const View = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-`;
-const Text = styled.Text`
-  font-size: 40px;
-`;
-
-function ToolsScreen() {
-  return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text>Settings!</Text>
-    </View>
-  );
-}
 
 const GameStack = createStackNavigator();
 const AuthStack = createStackNavigator();
@@ -120,7 +104,7 @@ function Navigation() {
       >
         <Tab.Screen name="Games" component={GameStackScreen} />
         <Tab.Screen name="Account" component={AuthStackScreen} />
-        <Tab.Screen name="Tools" component={ToolsScreen} />
+        <Tab.Screen name="Tools" component={HomeTools} />
       </Tab.Navigator>
     </NavigationContainer>
   );

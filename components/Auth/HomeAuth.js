@@ -1,7 +1,8 @@
 import React, {useContext} from 'react';
 import styled from 'styled-components/native';
-import UserContext from "../../utils/UserContext";
-import Login from "./Login";
+import UserContext from '../../utils/UserContext';
+import {Button, TextButton} from '../Button';
+import Login from './Login';
 
 const View = styled.View`
   width: 100%;
@@ -15,22 +16,26 @@ const Text = styled.Text`
   font-size: 20px;
   margin-bottom: 20px;
 `;
-const Button = styled.Button``;
+const StyledButton = styled(Button)`
+  margin-bottom: 20px;
+`;
 
-function HomeAuth({navigation}) {
+function HomeAuth() {
   const {user, logout} = useContext(UserContext);
-
-  const onRegistration = () => navigation.navigate('Register');
 
   return (
     <View>
       {user ? (
         <>
-          <Text>Connecté en tant que {user.pseudo}</Text>
-          <Button title="Deconnection" onPress={logout} />
+          <Text isText>Connecté en tant que {user.pseudo}</Text>
+          <StyledButton onPress={logout}>
+	          <TextButton>
+		          Déconnexion
+	          </TextButton>
+          </StyledButton>
         </>
       ) : (
-        <Login onRegistration={onRegistration} />
+        <Login />
       )}
     </View>
   );

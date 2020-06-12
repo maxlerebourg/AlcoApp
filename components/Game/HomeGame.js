@@ -1,11 +1,12 @@
-import React, {useState, useEffect} from 'react';
-import {Dimensions} from 'react-native';
-import styled from 'styled-components/native';
+import React, {useState, useEffect, useRef} from 'react';
+import {Dimensions, Animated, View} from 'react-native';
+import styled, {useTheme} from 'styled-components/native';
+import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import {getGames} from '../../utils/api';
 import HorizontalList from './HorizontalList';
-import Loader from "./Loader";
+import Loader from './Loader';
 
-const View = styled.View`
+const ContainerView = styled.View`
   width: 100%;
   height: 100%;
   background: ${props => props.theme.grey3};
@@ -18,26 +19,18 @@ const TouchableOpacity = styled.TouchableOpacity`
 	position: absolute;
 	bottom: 2%;
 	right: 2%;
-`;
-const PlusView = styled.View`
-  opacity: ${props => props.isVisible ? 1 : 0};
-  width: 55px;
-  height: 55px;
-  border-radius: 100px;
-  align-items: center;
-  justify-content: center;
-  background: red;
-`;
-const PlusText = styled.Text`
-  color: white;
-  font-size: 20px;
-  font-weight: bold;
+	width: 55px;
+	height: 55px;
+  overflow: hidden;
+  borderRadius: 100px;
 `;
 
 function HomeGame({navigation}) {
-  const [addConf, setAddConf] = useState({visible: true, offset: 0});
+	const fadeAnim = useRef(new Animated.Value(1)).current;
+  const [offset, setOffset] = useState(0);
   const [categories, setCategories] = useState(null);
   const [styled, setStyled] = useState(null);
+  const theme = useTheme();
 
   useEffect(() => {
     let mounted = true;
@@ -62,20 +55,25 @@ function HomeGame({navigation}) {
 
   const onScroll = event => {
     const currentOffset = event.nativeEvent.contentOffset.y;
-    const direction = currentOffset > addConf.offset ? 'down' : 'up';
+	  setOffset(currentOffset);
+    const direction = currentOffset > offset ? 'down' : 'up';
     const visible = direction === 'up';
-    if (visible !== addConf.visible) {
-      setAddConf({offset: currentOffset, visible: visible});
-    } else {
-      setAddConf({offset: currentOffset, visible: addConf.visible});
-    }
+    fade(visible ? 1 : 0);
   };
+
+	const fade = val => {
+		Animated.timing(fadeAnim, {
+			toValue: val,
+			duration: 250,
+			useNativeDriver: true,
+		}).start();
+	};
 
   const goCategory = category => navigation.navigate('Category', {category, styled});
 
   return (
-  	<View>
-	    <ScrollView onScroll={onScroll}>
+  	<ContainerView>
+	    <ScrollView onScrollBeginDrag={onScroll} onScrollEndDrag={onScroll}>
 		    <EmptyView />
 	      {categories !== null && categories.map(category => category.games.length !== 0 && (
 	        <HorizontalList
@@ -86,13 +84,21 @@ function HomeGame({navigation}) {
           />
 	      ))}
 	    </ScrollView>
-      <TouchableOpacity onPress={() => navigation.navigate('Add')}>
-	      <PlusView isVisible={addConf.visible}>
-          <PlusText>+</PlusText>
-	      </PlusView>
-      </TouchableOpacity>
+		  <TouchableOpacity onPress={() => navigation.navigate('Add')}>
+	      <Animated.View
+		      style={{
+		      	flex: 1,
+			      alignItems: 'center',
+			      justifyContent: 'center',
+			      backgroundColor: theme.red,
+	      	  opacity: fadeAnim,
+	        }}
+	      >
+	          <Icon name="cloud-upload" color={theme.white} size={20} />
+	      </Animated.View>
+			</TouchableOpacity>
       {categories === null && <Loader />}
-    </View>
+    </ContainerView>
   );
 }
 
