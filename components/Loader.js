@@ -25,7 +25,7 @@ function Loader() {
   return (
     <LoadingView>
       <Loading>
-        <Image source={require('../../images/dice.gif')} />
+        <Image source={require('../images/dice.gif')} />
       </Loading>
     </LoadingView>
   );

@@ -9,6 +9,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
+import com.reactnativecommunity.picker.RNCPickerPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;

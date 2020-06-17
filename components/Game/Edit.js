@@ -4,7 +4,7 @@ import {Alert} from 'react-native';
 import {Picker} from '@react-native-community/picker';
 import styled, {useTheme} from 'styled-components';
 import {GameContext, UserContext} from '../../utils/context';
-import {postGame} from '../../utils/api';
+import {validGame} from '../../utils/api';
 import {goConnectAlert} from '../../utils/alert';
 import {Button, TextButton} from '../Button';
 import {TextInput} from '../TextInput';
@@ -38,23 +38,28 @@ const StyledPicker = styled(Picker)`
 	min-height: 50px;
 `;
 
-function Add({navigation}) {
+function Add({navigation, route: {params: {game}}}) {
 	const theme = useTheme();
+	const [gameId] = useState(game && game.id);
 	const {user} = useContext(UserContext);
 	const {categories} = useContext(GameContext);
-	const card = categories.find(cat => cat.slug === 'cartes');
-  const {watch, register, setValue, handleSubmit} = useForm({
-    defaultValues: {
-      multiplayer: null,
-	    categoryId: card.id,
-    }
-  });
-	const watchMultiplayer = watch('multiplayer');
-	const watchCategoryId = watch('categoryId');
+  const {watch, register, setValue, handleSubmit} = useForm({defaultValues: {
+		  ...game,
+		  id: undefined,
+		  userId: undefined,
+		  updatedAt: undefined,
+		  createdAt: undefined,
+	  }});
+	const values = watch();
 
   const onSubmit = async (data) => {
-	  Alert.alert('Nop', JSON.stringify(data));
-    const game = await postGame(user.token, data);
+  	data = {
+  		gameId,
+  		...data,
+		  name: undefined,
+		  categoryId: undefined,
+	  };
+    const game = await validGame(user.token, data);
     if (game.name) {
       Alert.alert(
         'Ton jeu à été ajouté',
@@ -79,11 +84,12 @@ function Add({navigation}) {
   }, []);
 
   useEffect(() => {
-    register({ name: 'name'}, { required: true });
-    register({ name: 'preview'}, { required: true });
-	  register({ name: 'rules'}, { required: true });
-	  register({ name: 'images'}, { required: true });
-    register({ name: 'categoryId'}, { required: true });
+	  register({ name: 'name'});
+	  register({ name: 'status'});
+    register({ name: 'preview'});
+	  register({ name: 'rules'});
+	  register({ name: 'images'});
+    register({ name: 'categoryId'});
     register({ name: 'multiplayer'});
   }, [register]);
 
@@ -91,24 +97,37 @@ function Add({navigation}) {
     <KeyboardAvoidingView>
       <ScrollView>
         <StyledTextInput
+	        disabled
+	        value={values.name}
 	        placeholderTextColor={theme.grey1}
           onChangeText={text => setValue('name', text, true)}
           placeholder="Nom du jeu"
           autoCorrect={false}
         />
+	      <StyledPicker
+		      selectedValue={values.status}
+		      onValueChange={item => setValue('status', item, true)}
+	      >
+		      <StyledPicker.Item label="200" value="200" />
+		      <StyledPicker.Item label="201" value="201" />
+		      <StyledPicker.Item label="410" value="410" />
+	      </StyledPicker>
         <StyledTextInput
+	        value={values.preview}
 	        placeholderTextColor={theme.grey1}
           onChangeText={text => setValue('preview', text, true)}
           placeholder="Présentation courte"
           multiline
         />
 	      <StyledTextInput
+		      value={values.rules}
 		      placeholderTextColor={theme.grey1}
 		      onChangeText={text => setValue('rules', text, true)}
 		      placeholder="Règles"
 		      multiline
 	      />
 	      <StyledTextInput
+		      value={values.images}
 		      placeholderTextColor={theme.grey1}
 		      onChangeText={text => setValue('images', text, true)}
 		      placeholder="Image url"
@@ -116,14 +135,15 @@ function Add({navigation}) {
 	      />
 	      {categories !== null && (
 	      	<StyledPicker
-			      selectedValue={watchCategoryId}
+			      disabled
+			      selectedValue={values.categoryId}
 			      onValueChange={item => setValue('categoryId', item, true)}
 		      >
 			      {categories.map(({id, name}) => <StyledPicker.Item label={name} value={id} key={id} />)}
 		      </StyledPicker>
 	      )}
         <StyledPicker
-          selectedValue={watchMultiplayer}
+          selectedValue={values.multiplayer}
           onValueChange={item => setValue('multiplayer', item, true)}
         >
           <StyledPicker.Item label="2" value={2} />

@@ -1,10 +1,13 @@
-import React, {useState, useEffect, useRef} from 'react';
-import {Dimensions, Animated, View} from 'react-native';
+import React, {
+	useState, useEffect, useContext, useRef,
+} from 'react';
+import {Animated, useWindowDimensions} from 'react-native';
 import styled, {useTheme} from 'styled-components/native';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import {getGames} from '../../utils/api';
 import HorizontalList from './HorizontalList';
-import Loader from './Loader';
+import Loader from '../Loader';
+import {GameContext} from '../../utils/context';
 
 const ContainerView = styled.View`
   width: 100%;
@@ -26,18 +29,26 @@ const TouchableOpacity = styled.TouchableOpacity`
 `;
 
 function HomeGame({navigation}) {
+	const {setCategories} = useContext(GameContext);
 	const fadeAnim = useRef(new Animated.Value(1)).current;
-  const [offset, setOffset] = useState(0);
-  const [categories, setCategories] = useState(null);
-  const [styled, setStyled] = useState(null);
+	const [offset, setOffset] = useState(0);
+	const [cat, setCat] = useState(null);
+  const {width} = useWindowDimensions();
+  const styled = {
+	  width: (width - 60) / 3,
+	  height: (width - 60) / 3 + 60,
+  };
   const theme = useTheme();
 
   useEffect(() => {
     let mounted = true;
     const fetchGames = async () => {
-      const cat = await getGames();
+      const cats = await getGames();
+	    setCategories(cats.filter(category => category.slug !== undefined).map(
+		    category => ({id: category.id, name: category.name, slug: category.slug}),
+	    ));
       if (mounted) {
-        setCategories(cat);
+        setCat(cats);
       }
     };
     fetchGames();
@@ -46,19 +57,12 @@ function HomeGame({navigation}) {
     };
   }, []);
 
-  useEffect(() => {
-    setStyled({
-      width: (Dimensions.get('window').width - 60) / 3,
-      height: (Dimensions.get('window').width - 60) / 3 + 60,
-    });
-  }, []);
-
   const onScroll = event => {
     const currentOffset = event.nativeEvent.contentOffset.y;
-	  setOffset(currentOffset);
     const direction = currentOffset > offset ? 'down' : 'up';
     const visible = direction === 'up';
     fade(visible ? 1 : 0);
+	  setOffset(currentOffset);
   };
 
 	const fade = val => {
@@ -75,7 +79,7 @@ function HomeGame({navigation}) {
   	<ContainerView>
 	    <ScrollView onScrollBeginDrag={onScroll} onScrollEndDrag={onScroll}>
 		    <EmptyView />
-	      {categories !== null && categories.map(category => category.games.length !== 0 && (
+	      {cat !== null && cat.map(category => category.games.length !== 0 && (
 	        <HorizontalList
             key={category.id}
             goCategory={() => goCategory(category)}
@@ -84,20 +88,22 @@ function HomeGame({navigation}) {
           />
 	      ))}
 	    </ScrollView>
-		  <TouchableOpacity onPress={() => navigation.navigate('Add')}>
+		  <TouchableOpacity
+			  onPress={() => navigation.navigate('Add')}
+		  >
 	      <Animated.View
 		      style={{
 		      	flex: 1,
 			      alignItems: 'center',
 			      justifyContent: 'center',
-			      backgroundColor: theme.red,
+			      backgroundColor: theme.red2,
 	      	  opacity: fadeAnim,
 	        }}
 	      >
 	          <Icon name="cloud-upload" color={theme.white} size={20} />
 	      </Animated.View>
 			</TouchableOpacity>
-      {categories === null && <Loader />}
+      {cat === null && <Loader />}
     </ContainerView>
   );
 }

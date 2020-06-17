@@ -3,7 +3,7 @@ import {Alert} from 'react-native';
 import styled from 'styled-components/native';
 import GameItem from './GameItem';
 import {getGames} from '../../utils/api';
-import Loader from "./Loader";
+import Loader from "../Loader";
 
 const View = styled.View`
   width: 100%;

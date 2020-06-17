@@ -7,7 +7,7 @@ const View = styled.View`
 	align-items: center;
 `;
 const TouchableOpacity = styled.TouchableOpacity`
-	background: ${props => props.theme.red};
+	background: ${props => props.theme.red2};
 	justify-content: center;
 	align-items: center;
 	padding: 10px;
@@ -19,7 +19,7 @@ const TouchableOpacity = styled.TouchableOpacity`
 	`}
 `;
 const Text = styled.Text`
-	color: ${props => props.theme.greyTitle};
+	color: ${props => props.theme[props.isButton ? 'white' : 'greyTitle']};
 	font-size: ${props => props.isRaz ? 12 : 25}px;
 	font-weight: bold;
 `;
@@ -33,16 +33,16 @@ function Counter (){
 	return (
 		<View isRow>
 			<TouchableOpacity onPress={decrement}>
-				<Text>-</Text>
+				<Text isButton>-</Text>
 			</TouchableOpacity>
 			<View>
 				<Text>{count}</Text>
 				<TouchableOpacity isRaz onPress={raz}>
-					<Text isRaz>RAZ</Text>
+					<Text isButton isRaz>RAZ</Text>
 				</TouchableOpacity>
 			</View>
 			<TouchableOpacity onPress={increment}>
-				<Text>+</Text>
+				<Text isButton>+</Text>
 			</TouchableOpacity>
 		</View>
 	)

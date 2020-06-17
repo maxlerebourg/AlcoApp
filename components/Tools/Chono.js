@@ -8,7 +8,7 @@ const View = styled.View`
 	align-items: center;
 `;
 const TouchableOpacity = styled.TouchableOpacity`
-	background: ${props => props.theme.red};
+	background: ${props => props.theme.red2};
 	justify-content: center;
 	align-items: center;
 	padding: 10px;
@@ -18,7 +18,7 @@ const TouchableOpacity = styled.TouchableOpacity`
 	`}
 `;
 const Text = styled.Text`
-	color: ${props => props.theme.greyTitle};
+	color: ${props => props.theme[props.isTime ? 'greyTitle' : 'white']};
 	font-size: ${props => props.isTime ? 20 : 16}px;
 	font-weight: bold;
 `;

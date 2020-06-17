@@ -10,7 +10,9 @@ import HomeAuth from './Auth/HomeAuth';
 import HomeTools from './Tools/HomeTools';
 import Register from './Auth/Register';
 import Add from './Game/Add';
-import CategoryList from "./Game/CategoryList";
+import Edit from './Game/Edit';
+import Details from './Game/Details';
+import CategoryList from './Game/CategoryList';
 
 const GameStack = createStackNavigator();
 const AuthStack = createStackNavigator();
@@ -23,7 +25,8 @@ function AuthStackScreen() {
       screenOptions={{
         headerStyle: {
           backgroundColor: theme.grey3,
-          height: 40,
+	        height: 0,
+	        opacity: 0,
         },
         headerTintColor: theme.white,
       }}
@@ -49,7 +52,8 @@ function GameStackScreen() {
       screenOptions={{
         headerStyle: {
           backgroundColor: theme.grey3,
-          height: 40,
+          height: 0,
+	        opacity: 0,
         },
         headerTintColor: theme.white,
       }}
@@ -59,16 +63,26 @@ function GameStackScreen() {
         component={HomeGame}
         options={{title: 'Jeux de soirées'}}
       />
-      <GameStack.Screen
-        name="Add"
-        component={Add}
-        options={{title: 'Ajouter un jeu'}}
-      />
-      <GameStack.Screen
-        name="Category"
-        component={CategoryList}
-        options={({route}) => ({title: route.params.category.name})}
-      />
+	    <GameStack.Screen
+		    name="Add"
+		    component={Add}
+		    options={{title: 'Ajouter un jeu'}}
+	    />
+	    <GameStack.Screen
+		    name="Edit"
+		    component={Edit}
+		    options={{title: 'Editer un jeu'}}
+	    />
+	    <GameStack.Screen
+		    name="Category"
+		    component={CategoryList}
+		    options={({route}) => ({title: route.params.category.name})}
+	    />
+	    <GameStack.Screen
+		    name="Detail"
+		    component={Details}
+		    options={({route}) => ({title: route.params.game.name})}
+	    />
     </GameStack.Navigator>
   );
 }
@@ -80,7 +94,7 @@ function Navigation() {
       <Tab.Navigator
         tabBarOptions={{
           keyboardHidesTabBar: true,
-          activeTintColor: theme.red,
+          activeTintColor: theme.red2,
           inactiveTintColor: theme.greyText,
           style: {
             backgroundColor: theme.grey3,

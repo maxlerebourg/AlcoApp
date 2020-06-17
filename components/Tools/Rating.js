@@ -7,7 +7,7 @@ const View = styled.View`
 	align-items: center;
 `;
 const TouchableOpacity = styled.TouchableOpacity`
-	background: ${props => props.theme.red};
+	background: ${props => props.theme.red2};
 	justify-content: center;
 	align-items: center;
 	padding: 10px;

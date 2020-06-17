@@ -1,17 +1,12 @@
 import {Alert} from 'react-native';
 
-// const server = 'http://api.lerebourg.eu';
-const server = 'http://192.168.1.30:3001';
+//const server = 'http://api.lerebourg.eu';
+const server = 'http://192.168.1.13:3001';
 
 function convertJsonToUrl(json) {
   return Object.entries(json)
     .map(([key, value]) => `${key}=${value}`)
     .join('&');
-}
-
-async function getCategories(json) {
-	const url = `${server}/categories`;
-	return (await fetch(url)).json();
 }
 
 async function getGames(json) {
@@ -20,14 +15,21 @@ async function getGames(json) {
 }
 
 async function postGame(token, json) {
-  const url = `${server}/game?${convertJsonToUrl(json)}`;
-  Alert.alert('caca', url)
-  return (await fetch(url, {
-    method: 'POST',
-    headers: {
-      Authorization: token,
-    },
-  })).json();
+	const url = `${server}/game`;
+	return (await fetch(url, {
+		method: 'POST',
+		headers: { Authorization: token, 'Content-Type': 'application/json' },
+		body: JSON.stringify(json),
+	})).json();
+}
+
+async function validGame(token, json) {
+	const url = `${server}/admin/game`;
+	return (await fetch(url, {
+		method: 'POST',
+		headers: { Authorization: token, 'Content-Type': 'application/json' },
+		body: JSON.stringify(json),
+	})).json();
 }
 
 async function getComments(gameId) {
@@ -36,12 +38,11 @@ async function getComments(gameId) {
 }
 
 async function postComment(token, json) {
-  const url = `${server}/comments?${convertJsonToUrl(json)}`;
+  const url = `${server}/comment`;
   return fetch(url, {
     method: 'POST',
-    headers: {
-      Authorization: token,
-    },
+	  headers: { Authorization: token, 'Content-Type': 'application/json' },
+	  body: JSON.stringify(json),
   }).then(data => data.json());
 }
 
@@ -62,4 +63,4 @@ async function signup(json) {
     body: JSON.stringify(json),
   }).then(data => data.json());
 }
-export {getCategories, getGames, postGame, postComment, getComments, signin, signup};
+export {getGames, postGame, postComment, getComments, signin, signup, validGame};

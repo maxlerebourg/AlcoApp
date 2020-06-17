@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import {useNavigation} from '@react-navigation/native';
 
 const Image = styled.Image`
   margin-bottom: 4px;
@@ -12,26 +13,29 @@ const TouchableOpacity = styled.TouchableOpacity`
   height: ${props => props.styled[props.isEnd ? 'width' : 'height']}px;
   margin: 5px;
 `;
-const TitleGame = styled.Text`
-  color: ${props => props.theme.greyTitle};
-  font-size: 14px;
-  margin-bottom: 2px;
-`;
 const Text = styled.Text`
-  color: ${props => props.theme.greyText};
-  font-size: 12px;
+	${props => props.isTitle ? `
+		color: ${props.theme.greyTitle};
+		font-size: 14px;
+		margin-bottom: 2px;
+	` : `
+		color: ${props.theme.greyText};
+		font-size: 12px;
+	`}
 `;
 
 function GameItem({game, styled}) {
+	const navigation = useNavigation();
+
   return (
-    <TouchableOpacity styled={styled} onPress={() => {}}>
+    <TouchableOpacity styled={styled} onPress={() => navigation.navigate('Detail', {game})}>
       <Image
         source={{uri: game.images.split(',')[0]}}
         styled={styled}
       />
-      <TitleGame>{game.name}</TitleGame>
+      <Text isTitle>{game.name}</Text>
       {game.commentsRate !== 0 && game.commentsCount !== 0 && (
-        <Text>{((game.commentsRate * 10) / 10).toFixed(1)}&#9733;</Text>
+        <Text>{((game.commentsRate * 10) / 10).toFixed(1)}★</Text>
       )}
     </TouchableOpacity>
   );

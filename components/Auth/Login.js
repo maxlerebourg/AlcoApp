@@ -2,10 +2,11 @@ import React, {useEffect, useContext, useRef} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {useForm} from 'react-hook-form';
 import {Alert} from 'react-native';
-import styled from 'styled-components';
-import UserContext from '../../utils/UserContext';
+import styled, {useTheme} from 'styled-components';
+import {UserContext} from '../../utils/context';
 import {signin} from '../../utils/api';
 import {Button, TextButton} from '../Button';
+import {TextInput} from "../TextInput";
 
 const View = styled.View`
   height: 100%;
@@ -13,20 +14,19 @@ const View = styled.View`
   justify-content: center;
   align-items: center;
 `;
-const TextInput = styled.TextInput`
-  margin-bottom: 20px;
-  background: ${props => props.theme.grey2};
-  color: ${props => props.theme.white};
-  width: 60%;
+const StyledTextInput = styled(TextInput)`
+  width: 95%;
   max-width: 300px;
+  margin-bottom: 20px;
 `;
 const StyledButton = styled(Button)`
-  margin-bottom: 20px;
-  width: 60%;
+  width: 95%;
   max-width: 300px;
+  margin-bottom: 20px;
 `;
 
 function Login() {
+	const theme = useTheme();
 	const navigation = useNavigation();
   const {login} = useContext(UserContext);
   const ref = useRef(null);
@@ -47,14 +47,16 @@ function Login() {
 
   return (
     <View>
-      <TextInput
+      <StyledTextInput
+	      placeholderTextColor={theme.grey1}
         onChangeText={text => setValue('mail', text, true)}
         autoCapitalize="none"
         placeholder="Mail"
         autoCorrect={false}
         onSubmitEditing={ref.focus}
       />
-      <TextInput
+      <StyledTextInput
+	      placeholderTextColor={theme.grey1}
         onChangeText={text => setValue('password', text, true)}
         autoCapitalize="none"
         placeholder="Mot de passe"
@@ -66,7 +68,7 @@ function Login() {
       <StyledButton onPress={handleSubmit(onSubmit)}>
 	      <TextButton>Se connecter</TextButton>
       </StyledButton>
-      <StyledButton onPress={() => navigation.navigate('Register')}>
+      <StyledButton color="red1" onPress={() => navigation.navigate('Register')}>
 	      <TextButton>Inscription</TextButton>
       </StyledButton>
     </View>

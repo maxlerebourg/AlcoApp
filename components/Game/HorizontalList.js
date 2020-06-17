@@ -17,16 +17,12 @@ const TouchableTitle = styled.TouchableOpacity`
   justify-content: space-between;
   flex-direction: row;
 `;
-const Title = styled.Text`
-  color: ${props => props.theme.white};
+const Text = styled.Text`
+  color: ${props => props.theme.greyBigTitle};
 	font-size: 20px;
 	font-weight: bold;
-	${props => props.isTitle ? `
-	  margin: 5px 20px;
-	  font-size: 20px;
-	` : `
-	  font-size: 25px;
-	`};	
+\t  font-size: 20px;
+	${props => props.isTitle && 'margin: 5px 20px'};
 `;
 
 function HorizontalList({goCategory, category, styled}) {
@@ -35,8 +31,8 @@ function HorizontalList({goCategory, category, styled}) {
   return (
     <View>
       <TouchableTitle onPress={goCategory}>
-        <Title isTitle>{name}</Title>
-        <Title isTitle>&#8594;</Title>
+        <Text isTitle>{name}</Text>
+        <Text isTitle>&#8594;</Text>
       </TouchableTitle>
       <FlatList
 	      decelerationRate={'fast'}
@@ -47,7 +43,7 @@ function HorizontalList({goCategory, category, styled}) {
               styled={styled}
               onPress={goCategory}
             >
-              <Title>En découvrir plus</Title>
+              <Text>En découvrir plus</Text>
             </TouchableEnd>
           ) : <EmptyView />
 	      }
