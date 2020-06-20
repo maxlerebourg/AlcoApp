@@ -11,10 +11,12 @@ import HomeTools from './Tools/HomeTools';
 import Register from './Auth/Register';
 import Add from './Game/Add';
 import Edit from './Game/Edit';
+import Search from './Game/Search';
 import Details from './Game/Details';
 import CategoryList from './Game/CategoryList';
 
 const GameStack = createStackNavigator();
+const SearchGameStack = createStackNavigator();
 const AuthStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -46,45 +48,77 @@ function AuthStackScreen() {
 }
 
 function GameStackScreen() {
-  const theme = useTheme();
-  return (
-    <GameStack.Navigator
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: theme.grey3,
-          height: 0,
-	        opacity: 0,
-        },
-        headerTintColor: theme.white,
-      }}
-    >
-      <GameStack.Screen
-        name="Games"
-        component={HomeGame}
-        options={{title: 'Jeux de soirées'}}
-      />
-	    <GameStack.Screen
-		    name="Add"
-		    component={Add}
-		    options={{title: 'Ajouter un jeu'}}
-	    />
-	    <GameStack.Screen
-		    name="Edit"
-		    component={Edit}
-		    options={{title: 'Editer un jeu'}}
-	    />
-	    <GameStack.Screen
-		    name="Category"
-		    component={CategoryList}
-		    options={({route}) => ({title: route.params.category.name})}
-	    />
-	    <GameStack.Screen
-		    name="Detail"
-		    component={Details}
-		    options={({route}) => ({title: route.params.game.name})}
-	    />
-    </GameStack.Navigator>
-  );
+	const theme = useTheme();
+	return (
+		<GameStack.Navigator
+			screenOptions={{
+				headerStyle: {
+					backgroundColor: theme.grey3,
+					height: 0,
+					opacity: 0,
+				},
+				headerTintColor: theme.white,
+			}}
+		>
+			<GameStack.Screen
+				name="Games"
+				component={HomeGame}
+				options={{title: 'Jeux de soirées'}}
+			/>
+			<GameStack.Screen
+				name="Add"
+				component={Add}
+				options={{title: 'Ajouter un jeu'}}
+			/>
+			<GameStack.Screen
+				name="Edit"
+				component={Edit}
+				options={{title: 'Editer un jeu'}}
+			/>
+			<GameStack.Screen
+				name="Category"
+				component={CategoryList}
+				options={({route}) => ({title: route.params.category.name})}
+			/>
+			<GameStack.Screen
+				name="Detail"
+				component={Details}
+				options={({route}) => ({title: route.params.game.name})}
+			/>
+		</GameStack.Navigator>
+	);
+}
+
+function SearchGameStackScreen() {
+	const theme = useTheme();
+	return (
+		<SearchGameStack.Navigator
+			screenOptions={{
+				headerStyle: {
+					backgroundColor: theme.grey3,
+					height: 0,
+					opacity: 0,
+				},
+				headerTintColor: theme.white,
+			}}
+		>
+			<SearchGameStack.Screen
+				name="Search"
+				component={Search}
+				options={{title: 'Chercher un jeu'}}
+			/>
+			<SearchGameStack.Screen
+				name="Detail"
+				component={Details}
+				options={({route}) => ({title: route.params.game.name})}
+			/>
+			<SearchGameStack.Screen
+				name="Edit"
+				component={Edit}
+				options={{title: 'Editer un jeu'}}
+			/>
+		</SearchGameStack.Navigator>
+	);
 }
 
 function Navigation() {
@@ -108,7 +142,9 @@ function Navigation() {
             if (route.name === 'Games') {
               icon = 'grid';
             } else if (route.name === 'Account') {
-              icon = 'user';
+	            icon = 'user';
+            } else if (route.name === 'Search') {
+	            icon = 'magnifier';
             } else {
               icon = 'wrench';
             }
@@ -116,7 +152,8 @@ function Navigation() {
           },
         })}
       >
-        <Tab.Screen name="Games" component={GameStackScreen} />
+	      <Tab.Screen name="Games" component={GameStackScreen} />
+	      <Tab.Screen name="Search" component={SearchGameStackScreen} />
         <Tab.Screen name="Account" component={AuthStackScreen} />
         <Tab.Screen name="Tools" component={HomeTools} />
       </Tab.Navigator>

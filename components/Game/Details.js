@@ -103,7 +103,10 @@ function Details({navigation, route: {params: {game}}}) {
 	return (
 		<View>
 			<ScrollView>
-				<Image height={height * .6} source={{uri: images.split(',')[0]}} />
+				<Image
+					height={height * .6}
+					source={{uri: images.split(',')[0]}}
+				/>
 				<ViewTitle>
 					<Text isTitle>{name}</Text>
 				</ViewTitle>
@@ -122,7 +125,7 @@ function Details({navigation, route: {params: {game}}}) {
 					<Pin>
 						<Text isPin>{multiplayer || '4+'}</Text>
 					</Pin>
-					{user.admin && (
+					{user && user.admin && (
 						<Pin>
 							<TouchableOpacity onPress={async () => navigation.navigate('Edit', {game})}>
 								<Icon name="pencil" size={20} color={theme.greyText} />

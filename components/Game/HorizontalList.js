@@ -1,14 +1,15 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import {Alert} from "react-native";
+import {useNavigation} from '@react-navigation/native';
 import GameItem from "./GameItem";
+import {useWindowDimensions} from "react-native";
 
 const View = styled.View``;
 const EmptyView = styled.View`width: 15px;`;
 const FlatList = styled.FlatList``;
 const TouchableEnd = styled.TouchableOpacity`
-  width: ${props => props.styled.width}px;
-  height: ${props => props.styled.width}px;
+  width: ${props => props.dimension.width}px;
+  height: ${props => props.dimension.width}px;
   margin: 5px;
   justify-content: center;
 `;
@@ -25,12 +26,18 @@ const Text = styled.Text`
 	${props => props.isTitle && 'margin: 5px 20px'};
 `;
 
-function HorizontalList({goCategory, category, styled}) {
+function HorizontalList({category}) {
+	const {width} = useWindowDimensions();
+	const dimension = {
+		width: (width - 60) / 3,
+		height: (width - 60) / 3 + 60,
+	};
+	const navigation = useNavigation();
   const {games, name} = category;
 
   return (
     <View>
-      <TouchableTitle onPress={goCategory}>
+      <TouchableTitle onPress={() => navigation.navigate('Category', {category})}>
         <Text isTitle>{name}</Text>
         <Text isTitle>&#8594;</Text>
       </TouchableTitle>
@@ -40,19 +47,19 @@ function HorizontalList({goCategory, category, styled}) {
 	      ListFooterComponent={games.length === 10
           ? (
             <TouchableEnd
-              styled={styled}
-              onPress={goCategory}
+	            dimension={dimension}
+              onPress={() => navigation.navigate('Category', {category})}
             >
               <Text>En découvrir plus</Text>
             </TouchableEnd>
           ) : <EmptyView />
 	      }
-	      snapToInterval={styled.width + 10}
+	      snapToInterval={dimension.width + 10}
         horizontal
         showsHorizontalScrollIndicator={false}
         keyExtractor={item => item.name}
         data={games}
-        renderItem={({item: game}) => <GameItem game={game} styled={styled} />}
+        renderItem={({item: game}) => <GameItem game={game} dimension={dimension} />}
       />
     </View>
   );

@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components/native';
 import Counter from './Counter';
 import Chrono from './Chono';
+import Rating from './Rating';
 
 const View = styled.View`
 	width: 100%;
@@ -31,6 +32,10 @@ function HomeTools (){
 			<Tools>
 				<Text>Chronometre</Text>
 				<Chrono />
+			</Tools>
+			<Tools>
+				<Text>Gramme d'alcool d'une boisson</Text>
+				<Rating />
 			</Tools>
 		</View>
 	)

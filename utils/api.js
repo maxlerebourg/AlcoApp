@@ -1,7 +1,7 @@
 import {Alert} from 'react-native';
 
-//const server = 'http://api.lerebourg.eu';
-const server = 'http://192.168.1.13:3001';
+const server = 'http://api.lerebourg.eu';
+//const server = 'http://192.168.1.34:3001';
 
 function convertJsonToUrl(json) {
   return Object.entries(json)

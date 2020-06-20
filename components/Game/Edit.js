@@ -59,14 +59,12 @@ function Add({navigation, route: {params: {game}}}) {
 		  name: undefined,
 		  categoryId: undefined,
 	  };
-    const game = await validGame(user.token, data);
-    if (game.name) {
-      Alert.alert(
-        'Ton jeu à été ajouté',
-        `${data.name} est en attente de validation.`,
-      );
+	  Alert.alert('Jeu modifié', JSON.stringify(data));
+	  const response = await validGame(user.token, data)
+    if (!response.statusCode) {
+    	Alert.alert('Jeu modifié');
     } else {
-      //Alert.alert('Nop', 'Réessaye, tu as dû te tromper');
+	    Alert.alert('Erreur');
     }
   };
 
@@ -97,7 +95,7 @@ function Add({navigation, route: {params: {game}}}) {
     <KeyboardAvoidingView>
       <ScrollView>
         <StyledTextInput
-	        disabled
+	        editable={false}
 	        value={values.name}
 	        placeholderTextColor={theme.grey1}
           onChangeText={text => setValue('name', text, true)}
@@ -135,7 +133,7 @@ function Add({navigation, route: {params: {game}}}) {
 	      />
 	      {categories !== null && (
 	      	<StyledPicker
-			      disabled
+			      enabled={false}
 			      selectedValue={values.categoryId}
 			      onValueChange={item => setValue('categoryId', item, true)}
 		      >

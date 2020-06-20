@@ -1,49 +1,59 @@
-import React, {useState} from 'react';
-import styled from 'styled-components/native';
+import React, {useState, useRef, useEffect} from 'react';
+import styled, {useTheme} from 'styled-components';
+import {useForm} from "react-hook-form";
 
 const View = styled.View`
-	${props => props.isRow && 'flex-direction: row'};
-	justify-content: space-between;
-	align-items: center;
-`;
-const TouchableOpacity = styled.TouchableOpacity`
-	background: ${props => props.theme.red2};
-	justify-content: center;
-	align-items: center;
-	padding: 10px;
-	margin-top: 10px;
-	${props => !props.isRaz && `
-		height: 70px;
-		width: 70px;
-		border-radius: 50px;
+	${props => props.isRow && `
+		width: 100%;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		margin: 10px 0;
 	`}
+`;
+const TextInput = styled.TextInput`
+	color: ${props => props.theme.greyTitle};
+	padding: 0;
+	margin: 0;
+	border-bottom-width: 1px;
+	border-bottom-color: ${props => props.theme.greyTitle};
+	font-size: 15px;
 `;
 const Text = styled.Text`
 	color: ${props => props.theme.greyTitle};
-	font-size: ${props => props.isRaz ? 12 : 25}px;
-	font-weight: bold;
+	font-size: ${props => props.isLittle ? 12 : 15}px;
 `;
 
 function Counter (){
-	const [count, setCount] = useState(0);
-	const increment = () => setCount(i => i + 1);
-	const decrement = () => setCount(i => i - 1);
-	const raz = () => setCount(0);
+	const theme = useTheme();
+	const quant = useRef(null);
+	const {watch, register, setValue} = useForm({defaultValues: {rate: '0', quantity: '0'}});
+	useEffect(() => {
+		register({ name: 'rate'});
+		register({ name: 'quantity'});
+	}, [register]);
+
+	const values = watch();
 
 	return (
-		<View isRow>
-			<TouchableOpacity onPress={decrement}>
-				<Text>-</Text>
-			</TouchableOpacity>
-			<View>
-				<Text>{count}</Text>
-				<TouchableOpacity isRaz onPress={raz}>
-					<Text isRaz>RAZ</Text>
-				</TouchableOpacity>
+		<View>
+			<View isRow>
+				<TextInput
+					placeholderTextColor={theme.greyTitle}
+					keyboardType='numeric'
+					onSubmitEditing={quant.focus}
+					onChangeText={text => setValue('rate', text, true)}
+				/>
+				<Text>% pour</Text>
+				<TextInput
+					ref={quant}
+					placeholderTextColor={theme.greyTitle}
+					keyboardType='numeric'
+					onChangeText={text => setValue('quantity', text, true)}
+				/>
+				<Text>cl = {values.rate * 8 * values.quantity / 100}g d'alcool pur.</Text>
 			</View>
-			<TouchableOpacity onPress={increment}>
-				<Text>+</Text>
-			</TouchableOpacity>
+			<Text isLittle>Evitez de dépasser 30g par jour et 140g par semaine.</Text>
 		</View>
 	)
 }
